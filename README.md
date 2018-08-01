@@ -31,6 +31,11 @@ docker run -d -t --rm --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosp
 docker run -d -t --rm --name minion2 -p 4705:4505 -p 4706:4506 saltminion-junosproxy 
 docker ps
 ```
+alternatively you can run this command 
+```
+docker run -d -t --name minion2 -p 4705:4505 -p 4706:4506 saltminion-junosproxy
+
+```
 # to connect to a container cli
 ```
 docker exec -it master bash
@@ -45,8 +50,8 @@ docker exec -it master salt-key -L
 
 ```
 ```
-lab@jedi-healthbot-1:~/test$ docker exec -it minion1 salt-proxy -d --proxyid=dc-vmx-3
-lab@jedi-healthbot-1:~/test$ docker exec -it master salt dc-vmx-3 junos.cli 'show chassis hardware'
+docker exec -it minion1 salt-proxy -d --proxyid=dc-vmx-3
+docker exec -it master salt dc-vmx-3 junos.cli 'show chassis hardware'
 dc-vmx-3:
     ----------
     message:
