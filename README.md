@@ -31,10 +31,13 @@ docker run -d -t --rm --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosp
 docker run -d -t --rm --name minion2 -p 4705:4505 -p 4706:4506 saltminion-junosproxy 
 docker ps
 ```
-# to jump in a container 
+# to connect to a container cli
 ```
 docker exec -it master bash
 docker exec -it minion1 bash
 docker exec -it minion2 bash
 ```
-
+# to run commands in a container
+```
+docker exec -it master service salt-master start
+```
