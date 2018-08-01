@@ -88,17 +88,16 @@ Docker version 18.03.1-ce, build 9ee9f40
 git clone https://github.com/ksator/saltstack-junos-docker.git
 cd saltstack-junos-docker
 ```
-update the variables 
+# update the variables 
 ```
 vi variables.yml
 ```
-Run this script to create saltstack files 
+# Run this script to create saltstack files 
 ```
 python render.py
 ```
 
-# master 
-create a docker image
+# create a docker image for the master and junos-syslog-engine dependencies
 ```
 cd master
 sudo docker build -t saltmaster-junossyslog .
@@ -106,15 +105,14 @@ sudo docker build -t saltmaster-junossyslog .
 ```
 docker images
 ```
-instanciate a docker container
+# instanciate a docker container for the master 
 ```
 docker run -d -t --rm --name master -p 516:516/udp -p 4505:4505 -p 4506:4506 saltmaster-junossyslog 
 ```
 ```
 docker ps
 ```
-# minion
-create a docker image 
+# create a docker image for the minion and junos modules dependencies
 ```
 cd ../minion
 sudo docker build -t saltminion-junosproxy .
@@ -122,7 +120,7 @@ sudo docker build -t saltminion-junosproxy .
 ```
 docker images
 ```
-instanciate docker containers 
+# instanciate a a docker container for the minion
 ```
 docker run -d -t --rm --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosproxy
 ```
@@ -133,6 +131,11 @@ alternatively you can run this command (so the container wont be deleted if you 
 ```
 docker run -d -t --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosproxy
 ```
+# run these commands to start the salt service
+```
+docker exec -it master service salt-master start
+docker exec -it minion1 service salt-minion start
+```
 # to connect to a container cli
 ```
 docker exec -it master bash
@@ -142,11 +145,7 @@ exit
 docker exec -it minion1 bash
 exit
 ```
-# run these commands 
-```
-docker exec -it master service salt-master start
-docker exec -it minion1 service salt-minion start
-```
+# Verify the setup works
 ```
 docker exec -it master salt-key -L
 docker exec -it master salt minion1 test.ping
@@ -159,10 +158,11 @@ docker exec -it master salt dc-vmx-3 junos.cli 'show chassis hardware'
 ```
 docker exec -it master salt 'dc-vmx-3' state.apply syslog
 ```
-on the master
+
+# Verify the junos syslog engine 
 ```
 docker exec -it master bash
 salt-run state.event pretty=True
 ```
-ssh the junos device dc-vmx-3 and commit a configuration change.  
+ssh the junos device dc-vmx-3 and commit a configuration change and watch the event bus on the master
 
