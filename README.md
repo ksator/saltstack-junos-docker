@@ -1,10 +1,22 @@
 # requirements 
-install docker  
+install docker 
+
+```
+sudo apt-get update
+sudo apt-get install python-pip -y
+pip install pyyaml jinja2
+pip list
+``` 
 # clone the repo
 ```
 git clone
 cd 
 ```
+```
+vi variables.yml
+python render.py
+```
+
 # master 
 create a docker image
 ```
@@ -47,6 +59,12 @@ docker exec -it minion2 bash
 docker exec -it master service salt-master start
 docker exec -it minion1 service salt-minion start
 docker exec -it master salt-key -L
+
+```
+```
+docker exec -it master salt minion1 test.ping
+docker exec -it master salt "minion1" cmd.run "pwd"
+
 
 ```
 ```
