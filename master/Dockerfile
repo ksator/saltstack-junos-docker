@@ -7,6 +7,6 @@ RUN echo 'deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/archive/2018.3.2 
 RUN apt-get update
 RUN apt-get install -y salt-master python-pip nano vim tcpdump 
 RUN pip install pyparsing twisted 
-COPY master/master /etc/salt/master
-COPY master/pillar/. /srv/pillar/
-
+COPY master /etc/salt/master
+COPY pillar/. /srv/pillar/
+CMD service salt-master restart
