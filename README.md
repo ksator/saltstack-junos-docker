@@ -40,4 +40,24 @@ docker exec -it minion2 bash
 # to run commands in a container
 ```
 docker exec -it master service salt-master start
+docker exec -it minion1 service salt-minion start
+docker exec -it master salt-key -L
+
+```
+```
+lab@jedi-healthbot-1:~/test$ docker exec -it minion1 salt-proxy -d --proxyid=dc-vmx-3
+lab@jedi-healthbot-1:~/test$ docker exec -it master salt dc-vmx-3 junos.cli 'show chassis hardware'
+dc-vmx-3:
+    ----------
+    message:
+
+        Hardware inventory:
+        Item             Version  Part number  Serial number     Description
+        Chassis                                VM58A57C7D13      VMX
+        Midplane
+        Routing Engine 0                                         RE-VMX
+        CB 0                                                     VMX SCB
+    out:
+        True
+
 ```

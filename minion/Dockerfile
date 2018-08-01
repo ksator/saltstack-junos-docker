@@ -8,4 +8,6 @@ RUN apt-get update
 RUN apt-get install -y salt-minion python-pip nano vim tcpdump 
 RUN apt-get --auto-remove --yes remove python-openssl 
 RUN pip install pyOpenSSL junos-eznc jxmlease jsnapy
+COPY minion /etc/salt/minion
+COPY proxy /etc/salt/proxy
 
