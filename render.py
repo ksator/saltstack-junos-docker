@@ -1,10 +1,14 @@
 from yaml import load
 from jinja2 import Template
 
+################ get the variables value ##############
+
 my_variables_file=open('variables.yml', 'r')
 my_variables_in_string=my_variables_file.read()
 my_variables_in_yaml=load(my_variables_in_string)
 my_variables_file.close()
+
+################# render minion conf file ###################
 
 f=open('minion.j2')
 my_template = Template(f.read())
@@ -13,6 +17,8 @@ f.close()
 f=open('minion/minion','w')
 f.write(my_template.render(my_variables_in_yaml))
 f.close()
+
+################ render proxy config file ###################
 
 f=open('proxy.j2')
 my_template = Template(f.read())
@@ -26,6 +32,8 @@ f=open('master/proxy','w')
 f.write(my_template.render(my_variables_in_yaml))
 f.close()
 
+################### render junos configuration file #################
+
 f=open('syslog.j2')
 my_template = Template(f.read())
 f.close()
@@ -34,6 +42,7 @@ f=open('master/salt/syslog.conf','w')
 f.write(my_template.render(my_variables_in_yaml))
 f.close()
 
+################### render pillar files ################################
 f=open('pillars_top.j2')
 my_template = Template(f.read())
 f.close()

@@ -9,3 +9,4 @@ RUN apt-get install -y salt-master python-pip nano vim tcpdump
 RUN pip install pyparsing twisted 
 COPY master /etc/salt/master
 COPY pillar/. /srv/pillar/
+COPY salt/. /srv/salt

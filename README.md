@@ -40,19 +40,17 @@ docker images
 instanciate docker containers 
 ```
 docker run -d -t --rm --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosproxy
-docker run -d -t --rm --name minion2 -p 4705:4505 -p 4706:4506 saltminion-junosproxy 
 docker ps
 ```
 alternatively you can run this command 
 ```
-docker run -d -t --name minion2 -p 4705:4505 -p 4706:4506 saltminion-junosproxy
+docker run -d -t --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosproxy
 
 ```
 # to connect to a container cli
 ```
 docker exec -it master bash
 docker exec -it minion1 bash
-docker exec -it minion2 bash
 ```
 # to run commands in a container
 ```
@@ -84,3 +82,12 @@ dc-vmx-3:
         True
 
 ```
+```
+docker exec -it master salt 'dc-vmx-3' state.apply syslog
+```
+on the master
+```
+salt-run state.event pretty=True
+```
+
+
