@@ -8,7 +8,7 @@ This repository has been tested with an Ubuntu host running 16.04 release.
 
 ## Requirements to use this repository
 
-Install the requirements
+You first need to install some requirements on your Ubuntu host 
 
 ### Install these dependencies 
 
@@ -114,6 +114,7 @@ It will include the Junos syslog engine dependencies
 cd master
 sudo docker build -t saltmaster-junossyslog .
 ```
+Verify
 ```
 docker images
 ```
@@ -136,6 +137,7 @@ It will include the junos modules dependencies
 cd ../minion
 sudo docker build -t saltminion-junosproxy .
 ```
+Verify
 ```
 docker images
 ```
