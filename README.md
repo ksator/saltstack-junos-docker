@@ -141,7 +141,7 @@ Verify
 ```
 docker images
 ```
-## Instanciate a a docker container for the minion
+## Instanciate a docker container for the minion
 ```
 docker run -d -t --rm --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosproxy
 ```
