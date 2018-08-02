@@ -1,6 +1,16 @@
-# requirements 
+# About this project
 
-## intall these dependencies 
+This repository provides Dockerfiles for SaltStack master and minion, including the dependencies to use Junos modules and Junos syslog engine.  
+It has also a script that generate SaltStack files (minion and proxy configuration files, pillars ....)  
+This repository has been tested with an Ubuntu host running 16.04 release.  
+
+# How to use this repository
+
+## Requirements to use this repository
+
+Install the requirements
+
+### Install these dependencies 
 
 ```
 sudo apt-get update
@@ -9,8 +19,7 @@ pip install pyyaml jinja2
 pip list
 ``` 
 
-
-## install docker 
+### Install docker 
 
 Check if Docker is already installed 
 ```
@@ -83,21 +92,24 @@ $ docker --version
 Docker version 18.03.1-ce, build 9ee9f40
 ```
 
-# clone the repo
+## Clone the repository
 ```
 git clone https://github.com/ksator/saltstack-junos-docker.git
 cd saltstack-junos-docker
 ```
-# update the variables 
+## Update the variables 
 ```
 vi variables.yml
 ```
-# Run this script to create saltstack files 
+## Run this script 
+It will use your variables to create saltstack files (pillars, minion and proxy configurartion files, ...) 
+
 ```
 python render.py
 ```
 
-# create a docker image for the master and junos-syslog-engine dependencies
+## Create a docker image for the master
+It will include the Junos syslog engine dependencies 
 ```
 cd master
 sudo docker build -t saltmaster-junossyslog .
@@ -105,14 +117,21 @@ sudo docker build -t saltmaster-junossyslog .
 ```
 docker images
 ```
-# instanciate a docker container for the master 
+## Instanciate a docker container for the master 
 ```
 docker run -d -t --rm --name master -p 516:516/udp -p 4505:4505 -p 4506:4506 saltmaster-junossyslog 
 ```
+Alternatively you can run this command (so the container wont be automatically deleted if you stop it)
+```
+docker run -d -t --name master -p 516:516/udp -p 4505:4505 -p 4506:4506 saltmaster-junossyslog 
+```
+Verify
 ```
 docker ps
 ```
-# create a docker image for the minion and junos modules dependencies
+
+## Create a docker image for the minion
+It will include the junos modules dependencies
 ```
 cd ../minion
 sudo docker build -t saltminion-junosproxy .
@@ -120,23 +139,20 @@ sudo docker build -t saltminion-junosproxy .
 ```
 docker images
 ```
-# instanciate a a docker container for the minion
+## Instanciate a a docker container for the minion
 ```
 docker run -d -t --rm --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosproxy
 ```
-```
-docker ps
-```
-alternatively you can run this command (so the container wont be deleted if you stop it)
+Alternatively you can run this command (so the container wont be automatically deleted if you stop it)
 ```
 docker run -d -t --name minion1 -p 4605:4505 -p 4606:4506 saltminion-junosproxy
 ```
-# run these commands to start the salt service
+Verify: 
 ```
-docker exec -it master service salt-master start
-docker exec -it minion1 service salt-minion start
+docker ps
 ```
-# to connect to a container cli
+## How to connect to a container cli? 
+If you want to connect to a container cli, run these commands: 
 ```
 docker exec -it master bash
 exit
@@ -145,9 +161,17 @@ exit
 docker exec -it minion1 bash
 exit
 ```
-# Verify the setup works
+## Start the salt service
+Run these commands to start the salt service
+```
+docker exec -it master service salt-master start
+docker exec -it minion1 service salt-minion start
+```
+## Verify the setup works
 ```
 docker exec -it master salt-key -L
+```
+```
 docker exec -it master salt minion1 test.ping
 docker exec -it master salt "minion1" cmd.run "pwd"
 ```
@@ -155,14 +179,15 @@ docker exec -it master salt "minion1" cmd.run "pwd"
 docker exec -it minion1 salt-proxy -d --proxyid=dc-vmx-3
 docker exec -it master salt dc-vmx-3 junos.cli 'show chassis hardware'
 ```
+
+## Verify the junos syslog engine 
 ```
 docker exec -it master salt 'dc-vmx-3' state.apply syslog
 ```
-
-# Verify the junos syslog engine 
+Connect to the master cli and watch the event bus:  
 ```
 docker exec -it master bash
 salt-run state.event pretty=True
 ```
-ssh the junos device dc-vmx-3 and commit a configuration change and watch the event bus on the master
+ssh the junos device and commit a configuration change and watch the event bus on the master
 
